@@ -20,12 +20,14 @@ import Step11 from "./Pages/Step11";
 import Step12 from "./Pages/Step12";
 import AddExperience from "./Pages/Addexperience";
 import Step13 from "./Pages/Step13";
+import Home from "./Pages/Home";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<First />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/onbody" element={<First />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/welcome" element={<Welcome />} />
