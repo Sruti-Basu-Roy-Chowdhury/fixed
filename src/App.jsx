@@ -21,6 +21,7 @@ import Step12 from "./Pages/Step12";
 import AddExperience from "./Pages/Addexperience";
 import Step13 from "./Pages/Step13";
 import Home from "./Pages/Home";
+import Jobs from "./Pages/Job";
 
 function App() {
   return (
@@ -48,6 +49,8 @@ function App() {
         <Route path="/step12" element={<Step12 />} />
         <Route path="/add-experience" element={<AddExperience />} />
         <Route path="/step13" element={<Step13 />} />
+        <Route path="/Jobs" element={<Jobs/>} />
+
       </Routes>
     </Router>
   );
