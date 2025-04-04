@@ -61,7 +61,7 @@ const Welcome = () => {
         <p className="mt-4 text-sm font-[poppins]">
           Don't have an account?{" "}
           <Link
-            to="/signup"
+            to="/dashboard"
             className="text-[#00A7AC] font-[poppins] font-semibold hover:underline"
           >
             Sign up here!

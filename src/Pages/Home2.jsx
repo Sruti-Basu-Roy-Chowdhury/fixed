@@ -17,7 +17,7 @@ import MessageIcon from "/src/assets/images/message.png";
 import Icon from "/src/assets/images/Icon.png";
 import Status from "/src/assets/images/status-up.png";
 import Money from "/src/assets/images/money-add.png";
-import  Charger from "/src/assets/images/cpu-charge.png";
+import Charger from "/src/assets/images/cpu-charge.png";
 import Image1 from"/src/assets/images/image 16.jpg";
 import Image2 from"/src/assets/images/image (2).jpg";
 import Image3 from"/src/assets/images/image (3).jpg";
@@ -45,28 +45,12 @@ import Image24 from"/src/assets/images/Frame 1211 (1).png";
 import Image25 from"/src/assets/images/Frame 1211 (2).png";
 import Footer from"/src/component/Footer";
 import Go from"/src/component/Go";
+import userProfile from "/src/assets/images/image 23.png"; // Add your user profile image path
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const Home = () => {
+const Home2 = () => {
     const [showNavbar, setShowNavbar] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Add login state
 
     useEffect(() => {
         const handleScroll = () => {
@@ -82,11 +66,15 @@ const Home = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [lastScrollY]);
 
-
-
+    // Simulate login state - in a real app, this would come from auth context
+    useEffect(() => {
+        // Check if user is logged in (from localStorage, auth context, etc.)
+        // For demo purposes, we'll set it to true
+        setIsLoggedIn(true);
+    }, []);
 
     return (
-    <div className="bg-[#061421] min-h-screen relative overflow-hidden w-full">
+        <div className="bg-[#061421] min-h-screen relative overflow-hidden w-full">
             {/* Navbar with dynamic class for hiding */}
             <nav className={`w-full max-w-screen overflow-hidden h-[110px] bg-gradient-to-r from-[#05445E] to-[#061421] shadow-lg flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}>
                 <div className="flex items-center">
@@ -97,9 +85,31 @@ const Home = () => {
                     <a href="#" className="hover:underline">Companies</a>
                     <a href="#" className="hover:underline">Consultancy</a>
                 </div>
-                <div className="flex items-center space-x-6 text-white text-lg font-[lato]">
-                    <a href="/onbody" className="hover:underline">Login</a>
-                    <a href="/dashboard" className="hover:underline">Signup</a>
+                <div className="flex items-center space-x-6 text-white text-lg font-[lato] relative"> {/* Added relative here */}
+    {isLoggedIn ? (
+        <div className="flex items-center space-x-4">
+            <div className="relative group">
+                <button className="flex items-center space-x-2 hover:underline">
+                    <img 
+                        src={userProfile} 
+                        alt="User Profile" 
+                        className="w-10 h-10 rounded-full object-cover border-2 border-white"
+                    />
+                </button>
+                <div className="hidden group-hover:block absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-lg font-[lato] z-50"> {/* Added z-50 */}
+                    <a href="#" className="block px-4 py-2 hover:bg-gray-200">Profile</a>
+                    <a href="#" className="block px-4 py-2 hover:bg-gray-200">Dashboard</a>
+                    <a href="#" className="block px-4 py-2 hover:bg-gray-200">Logout</a>
+                </div>
+            </div>
+        </div>
+    ) : (
+        <>
+            <a href="/onbody" className="hover:underline">Login</a>
+            <a href="/dashboard" className="hover:underline">Signup</a>
+        </>
+    )}
+
                     <div className="relative group">
                         <button className="flex items-center space-x-2 hover:underline">
                             <span>Job Seeker</span>
@@ -113,10 +123,9 @@ const Home = () => {
                     </div>
                 </div>
             </nav>
-    
 
-            {/* Content Section */}
-            <div className="flex items-center justify-between min-h-screen px-12 relative">
+          {/* Content Section */}
+          <div className="flex items-center justify-between min-h-screen px-12 relative">
                 {/* Text Content */}
                 <div className="text-white text-left max-w-lg font-[poppins]">
                     <h1 className="text-5xl font-bold">Find Your</h1>
@@ -874,4 +883,4 @@ Streamline the interview process by setting your expectations (salary, industry,
     );
 };
 
-export default Home;
+export default Home2;

@@ -46,7 +46,7 @@ const Otp = () => {
     if (isOtpComplete) {
       const otpValue = otp.join("");
       console.log("OTP Verified: ", otpValue);
-      navigate("/dashboard");
+      navigate("/Home2");
     }
   };
 
@@ -131,7 +131,7 @@ const Otp = () => {
         <p className="mt-4 text-sm">
           Don't have an account?{" "}
           <a
-            href="/signup"
+            href="/dashboard"
             className="text-[#00A7AC] font-semibold hover:underline"
           >
             Sign up here
