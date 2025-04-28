@@ -88,13 +88,16 @@ const Home = () => {
     return (
     <div className="bg-[#061421] min-h-screen relative overflow-hidden w-full">
             {/* Navbar with dynamic class for hiding */}
-            <nav className={`w-full max-w-screen overflow-hidden h-[110px] bg-gradient-to-r from-[#05445E] to-[#061421] shadow-lg flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}>
-                <div className="flex items-center">
+            <nav
+        className={`w-full max-w-screen h-[110px] bg-gradient-to-r from-[#05445E] to-[#061421] shadow-lg flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+          showNavbar ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >                <div className="flex items-center">
                     <img src={logo} alt="Logo" className="h-[60px]" />
                 </div>
                 <div className="flex space-x-4 text-white text-lg font-[lato]">
-                    <a href="Jobs" className="hover:underline">Jobs</a>
-                    <a href="#" className="hover:underline">Companies</a>
+                    <a href="/Job" className="hover:underline">Jobs</a>
+                    <a href="/companies" className="hover:underline">Companies</a>
                     <a href="#" className="hover:underline">Consultancy</a>
                 </div>
                 <div className="flex items-center space-x-6 text-white text-lg font-[lato]">

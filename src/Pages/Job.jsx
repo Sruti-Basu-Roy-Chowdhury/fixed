@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { ChevronDown, Search } from "lucide-react";
@@ -14,44 +14,36 @@ import { FaMedal } from 'react-icons/fa';
 import { HiArrowLeft } from "react-icons/hi";
 import { HiArrowRight } from "react-icons/hi";
 import { IoBookmarkSharp } from "react-icons/io5";
-import Footer from"/src/component/Footer";
-
+import Footer from "/src/component/Footer";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
     
-    // Always show first page
     pages.push(1);
     
-    // Calculate start and end of visible page range
     let start = Math.max(2, currentPage - 1);
     let end = Math.min(totalPages - 1, currentPage + 1);
     
-    // Adjust if we're near the start or end
     if (currentPage <= 3) {
       end = Math.min(4, totalPages - 1);
     } else if (currentPage >= totalPages - 2) {
       start = Math.max(totalPages - 3, 2);
     }
     
-    // Add ellipsis if needed after first page
     if (start > 2) {
       pages.push('...');
     }
     
-    // Add visible page numbers
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
     
-    // Add ellipsis if needed before last page
     if (end < totalPages - 1) {
       pages.push('...');
     }
     
-    // Always show last page if there's more than one page
     if (totalPages > 1) {
       pages.push(totalPages);
     }
@@ -60,17 +52,16 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    
-      <button className=" p-2 w-full border border-[#EFEFEF] flex justify-center items-center mt-6 space-x-2 font-[poppins]">
+    <button className=" p-2 w-full border border-[#EFEFEF] flex justify-center items-center mt-6 space-x-2 font-[poppins]">
       <button 
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-white text-[#05445E] cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-300'}`}
       >
-         <h1 className="  flex items-center gap-2 text-gray-700 hover:text-gray-900">
-      <HiArrowLeft />
-      Previous
-    </h1>
+        <h1 className="  flex items-center gap-2 text-gray-700 hover:text-gray-900">
+          <HiArrowLeft />
+          Previous
+        </h1>
       </button>
       
       {getPageNumbers().map((page, index) => (
@@ -90,15 +81,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         className={`px-3 py-1 rounded-md ${currentPage === totalPages ? 'bg-white text-[#05445E] cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-300'}`}
       >
         <div className="  flex items-center gap-2 text-gray-700 hover:text-gray-900">
-      
-        Next
-        <HiArrowRight />
-
-</div>
+          Next
+          <HiArrowRight />
+        </div>
       </button>
-      </button>
-   
-    
+    </button>
   );
 };
 
@@ -107,40 +94,123 @@ const Job = () => {
   const [minValue, setMinValue] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [selectedExperience, setSelectedExperience] = useState([]);
   const [sortFilter, setSortFilter] = useState("Newest Post");
   const [currentPage, setCurrentPage] = useState(1);
-  const [jobsPerPage] = useState(18); // 3 columns x 3 rows = 9 jobs per page
+  const [jobsPerPage] = useState(18);
+  const [allJobs, setAllJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
 
-  // Mock job data - in a real app, this would come from an API
-  const [jobs, setJobs] = useState(
-    Array(4000).fill().map((_, i) => ({
-      id: i + 1,
-      title: i % 2 === 0 ? "Frontend Developer" : "Backend Developer",
-      company: i % 2 === 0 ? "Tech Corp" : "Tech",
-      description: "We're looking for a skilled developer with React/Node.js experience.",
-      employees: "100 - 500 Employees",
-      benefits: "Employee Benefits",
-      salary: "Salary-₹ 6-8 LPA",
-      image: Image2
-    }))
-  );
-  
+  useEffect(() => {
+    const companies = ["Google", "Amazon", "Microsoft", "Facebook", "Tesla", "Apple", "Netflix", "Tech Corp", "Dev Solutions"];
+    const jobTypes = ["Full-time", "Part-time", "Freelance", "Internship", "Contract", "Project-based"];
+    const experienceLevels = ["Entry Level", "Mid Level", "Senior Level"];
+    
+    const mockJobs = Array(4000).fill().map((_, i) => {
+      const randomCompany = companies[Math.floor(Math.random() * companies.length)];
+      const randomJobType = jobTypes[Math.floor(Math.random() * jobTypes.length)];
+      const randomExperience = experienceLevels[Math.floor(Math.random() * experienceLevels.length)];
+      
+      return {
+        id: i + 1,
+        title: i % 2 === 0 ? "Frontend Developer" : "Backend Developer",
+        company: randomCompany,
+        description: "We're looking for a skilled developer with React/Node.js experience.",
+        employees: `${Math.floor(Math.random() * 500) + 1} - ${Math.floor(Math.random() * 500) + 500} Employees`,
+        benefits: "Employee Benefits",
+        salary: generateSalary(i % 2 === 0 ? "Frontend" : "Backend", randomJobType, randomExperience),
+        jobType: randomJobType,
+        experienceLevel: randomExperience,
+        image: Image2,
+        postedDate: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000)
+      };
+    });
+    
+    // Helper function to generate appropriate salaries
+    function generateSalary(role, jobType, experience) {
+      // Base salary ranges by role (in LPA)
+      const baseSalaries = {
+        "Frontend": { min: 3, max: 8 },
+        "Backend": { min: 5, max: 15 }
+      };
+      
+      // Adjustments based on experience level
+      const experienceMultipliers = {
+        "Entry Level": 0.7,
+        "Mid Level": 1.0,
+        "Senior Level": 1.5,
+        "Expert": 2.0
+      };
+      
+      // Adjustments based on job type
+      const jobTypeAdjustments = {
+        "Full-time": 1.0,
+        "Part-time": 0.6,
+        "Contract": 1.2,
+        "Freelance": 0.8,
+        "Internship": 0.3
+      };
+      
+      // Get base salary for the role
+      const base = baseSalaries[role];
+      const baseMin = base.min;
+      const baseMax = base.max;
+      
+      // Apply experience multiplier
+      const expMultiplier = experienceMultipliers[experience] || 1.0;
+      let adjustedMin = baseMin * expMultiplier;
+      let adjustedMax = baseMax * expMultiplier;
+      
+      // Apply job type adjustment
+      const jobAdjustment = jobTypeAdjustments[jobType] || 1.0;
+      adjustedMin = adjustedMin * jobAdjustment;
+      adjustedMax = adjustedMax * jobAdjustment;
+      
+      // Round to nearest integer and ensure minimum of 1
+      const finalMin = Math.max(1, Math.round(adjustedMin));
+      const finalMax = Math.max(finalMin + 1, Math.round(adjustedMax));
+      
+      return `Salary-₹ ${finalMin}-${finalMax} LPA`;
+    }
+    
+    setAllJobs(mockJobs);
+    setFilteredJobs(mockJobs);
+  }, []);
 
-  // Calculate total pages
-  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  useEffect(() => {
+    let filtered = [...allJobs];
+    
+    if (selectedOptions.length > 0) {
+      filtered = filtered.filter(job => selectedOptions.includes(job.jobType));
+    }
+    if (selectedExperience.length > 0) {
+      filtered = filtered.filter(job => selectedExperience.includes(job.experienceLevel));
+    }
+    if (selectedCompanies.length > 0) {
+      filtered = filtered.filter(job => selectedCompanies.includes(job.company));
+    }
+    if (sortFilter === "Newest Post") {
+      filtered.sort((a, b) => b.postedDate - a.postedDate);
+    } else if (sortFilter === "Past 5 Days") {
+      const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(job => job.postedDate >= fiveDaysAgo);
+    } else if (sortFilter === "Past 15 Days") {
+      const fifteenDaysAgo = new Date(Date.now() - 15 * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(job => job.postedDate >= fifteenDaysAgo);
+    } else if (sortFilter === "Past 30 Days") {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(job => job.postedDate >= thirtyDaysAgo);
+    }
+    
+    setFilteredJobs(filtered);
+    setCurrentPage(1);
+  }, [selectedOptions, selectedExperience, selectedCompanies, sortFilter, allJobs]);
 
-  // Get current jobs
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
-
-  // Change page
-  const paginate = (pageNumber) => {
-    if (typeof pageNumber === 'number' && pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
 
   const options = [
     "Full-time",
@@ -160,7 +230,6 @@ const Job = () => {
   };
 
   const experienceLevels = ["Entry Level", "Mid Level", "Senior Level"];
-  const [selectedExperience, setSelectedExperience] = useState([]);
 
   const toggleExperienceLevels = (level) => {
     setSelectedExperience((prevSelected) =>
@@ -177,10 +246,10 @@ const Job = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <Navbar activePage="job" />
+        <Navbar activePage="Jobs" />
         <div className="text-center p-40 text-[#05445E] w-full h-100 bg-gradient-to-b from-white via-[#DEF4FF] to-white">
           <h1 className="font-[poppins] text-5xl font-bold">
-            There are {jobs.length}+ Jobs here for you
+            There are {allJobs.length}+ Jobs here for you
           </h1>
           <p className="text-lg font-semibold mt-4 font-[poppins]">
             Discover the best remote and work-from-home jobs at top remote
@@ -188,7 +257,6 @@ const Job = () => {
           </p>
         </div>
 
-        {/* Search and filters */}
         <div className="flex justify-center items-center space-x-4 mt-6 px-2">
           <div className="relative w-[850px]">
             <input
@@ -241,9 +309,7 @@ const Job = () => {
           ))}
         </div>
 
-        {/* Main Content Area */}
         <div className="flex px-20 py-10 gap-8">
-          {/* Left Sidebar - Filters */}
           <div className="w-1/4 flex flex-col gap-6">
             <div className="bg-[#E5F6FE] shadow-lg rounded-lg p-6 border border-gray-200">
               <h2 className="text-2xl font-semibold text-[#000000]">
@@ -439,11 +505,10 @@ const Job = () => {
             </div>
           </div>
 
-          {/* Right Side - Job Cards */}
           <div className="w-3/4 font-[poppins]">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-xl font-bold text-gray-800">
-                Showing {indexOfFirstJob + 1}-{Math.min(indexOfLastJob, jobs.length)} Jobs of {jobs.length}
+                Showing {indexOfFirstJob + 1}-{Math.min(indexOfLastJob, filteredJobs.length)} Jobs of {filteredJobs.length}
               </h1>
               <div className="relative group font-[poppins]">
                 <div className="flex items-center space-x-2 text-[#00A7AC] text-sm cursor-pointer">
@@ -472,7 +537,6 @@ const Job = () => {
               </div>
             </div>
             
-            {/* Job Cards Grid */}
             <div className="grid grid-cols-3 font-[poppins] gap-4">
               {currentJobs.map((job) => (
                 <Link 
@@ -518,8 +582,6 @@ const Job = () => {
                       <button className="text-[10px] ml-2 bg-white text-[#000000] border border-[#DFDFDF] px-6 py-2 rounded-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#00A7AC] transition-colors duration-300">
                         Full-time
                       </button>
-                      
-
                     </div>
                     <IoBookmarkSharp className="text-[#D9D9D9] text-[20px] ml-60 -mt-7"/>
                   </div>
@@ -530,13 +592,12 @@ const Job = () => {
             <Pagination 
               currentPage={currentPage} 
               totalPages={totalPages} 
-              onPageChange={paginate} 
+              onPageChange={setCurrentPage} 
             />
           </div>
         </div>
         
-       <Footer/>
-        
+        <Footer/>
       </motion.div>
     </div>
   );

@@ -25,6 +25,22 @@ import Jobs from "./Pages/Job";
 import Job1 from "./Pages/Job1";
 import Job2 from "./Pages/Job2";
 import Home2 from "./Pages/Home2";
+import Dashboard2 from "./Pages/Dashboard2";
+import Profile from "./Pages/Profile";
+import AplliedJob from"./Pages/AplliedJob";
+import SavedJob from"./Pages/SavedJob";
+import Resume from"./Pages/Resume";
+import Message from"./Pages/Message";
+import Companie from"./Pages/Companie";
+import Companies1 from"./Pages/Companies1";
+import Com from"./Pages/Com";
+import Pricing from"./Pages/Pricing";
+
+
+
+
+
+
 
 
 
@@ -54,10 +70,22 @@ function App() {
         <Route path="/step12" element={<Step12 />} />
         <Route path="/add-experience" element={<AddExperience />} />
         <Route path="/step13" element={<Step13 />} />
-        <Route path="/Jobs" element={<Jobs/>} />
+        <Route path="/Job" element={<Jobs/>} />
         <Route path="/job1" element={<Job1/>} />
         <Route path="/job2" element={<Job2/>} />
         <Route path="/Home2" element={<Home2/>} />
+        <Route path="/dashboard2" element={<Dashboard2/>} />
+        <Route path="/profile" element={<Profile/>} />
+        <Route path="/applied-jobs" element={<AplliedJob/>} />
+        <Route path="/saved-jobs" element={<SavedJob/>} />
+        <Route path="/resume" element={<Resume/>} />
+        <Route path="/messages" element={<Message/>} />
+        <Route path="/companies" element={<Companie/>} />
+        <Route path="/Companies1" element={<Companies1/>} />
+        <Route path="/com" element={<Com/>} />
+        <Route path="/pricing" element={<Pricing/>} />
+
+
 
 
       </Routes>
